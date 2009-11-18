@@ -1,0 +1,128 @@
+<html>
+<head>
+    <title>JavaScript Line Chart Example</title>
+    <meta content="">
+    <style></style>
+    <script src='js/mootools-1.2.3-core-nc.js' type='text/javascript'></script>
+    <script src='js/chart.js' type='text/javascript'></script>
+    <script src='js/jsDraw2D.js' type='text/javascript'></script>
+<script type="text/javascript">
+var chart;
+var button = false;
+
+        function movestart(e)
+     {
+      if (!e) 
+             var e = window.event;
+         
+      if (!e.which && e.button)
+      {
+          button = e.button < 2;
+      }
+      else if (e.which)
+      {
+       button = e.which < 2;
+      }
+     }
+        
+        function mousemovechart(e) 
+        {
+
+         var posx = 0;
+         var posy = 0;
+         if (!e) 
+             var e = window.event;
+
+            if (button)
+            {
+          if (e.pageX || e.pageY)  
+             {
+           posx = e.pageX;
+           posy = e.pageY;
+          }
+          else if (e.clientX || e.clientY)  
+             {
+           posx = e.clientX + document.body.scrollLeft
+            + document.documentElement.scrollLeft;
+           posy = e.clientY + document.body.scrollTop
+            + document.documentElement.scrollTop;
+          }
+          
+          chart.transformation.translate(0,0,-200);
+          chart.transformation.rotateY(posx/100);
+          chart.transformation.rotateX(posy/100);
+          chart.paint();
+            }
+        }
+
+function updateContent(params)
+{
+$('content-center').setStyle('display', 'block');
+chart = new Chart3D({
+                 canvas: $('content-center'),
+                 axes: [
+            new Axis3D({
+            line: new Line({
+             point1: new Point3D({x: 0, y:0, z:0, color:defaultColor}),
+             point2: new Point3D({x: 100, y:0, z:0, color:defaultColor}),
+             color: defaultColor
+            }),
+            range: {start: 0, end: 100},
+            text: new Text({ 
+             point: new Point3D({x: 100, y:0, z:0, color:defaultColor}),
+             text: 'x'
+            }),
+            tick: 10,
+            mode: 'x'
+           }),
+           
+           new Axis3D({
+            line: new Line({
+             point1: new Point3D({x: 0, y:0, z:0, color:defaultColor}),
+             point2: new Point3D({x: 0, y:100, z:0, color:defaultColor}),
+             color: defaultColor
+             }),
+            range: {start: 0, end: 100},
+            text: new Text({ 
+             point: new Point3D({x: 0, y:100, z:0, color:defaultColor}),
+             text: 'y'
+            }),
+            tick: 10,
+            mode: 'y'
+           }),
+           new Axis3D({
+            line: new Line({
+             point1: new Point3D({x: 0, y:0, z:0, color:defaultColor}),
+             point2: new Point3D({x: 0, y:0, z:100, color:defaultColor}),
+             color: defaultColor
+             }),
+            range: {start: 0, end: 100},
+            text: new Text({ 
+             point: new Point3D({x: 0, y:0, z:100, color:defaultColor}),
+             text: 'z'
+            }),
+            tick: 6,
+            mode: 'z'
+           })]
+       });
+
+chart.transformation.rotateX(100);
+chart.transformation.rotateY(100);
+
+var polyLine = new PolyLine();
+polyLine.add(new Point3D({x: 20, y: 20, z : 60}));
+polyLine.add(new Point3D({x: 40, y: 70, z : 60}));
+polyLine.add(new Point3D({x: 60, y: 40, z : 20}));
+polyLine.add(new Point3D({x: 20, y: 20, z : 60}));
+chart.add(polyLine);
+chart.paint();
+}
+</script>
+
+</head>
+<h4>Hold your left mouse down and move the mouse</h4>
+<body onLoad="updateContent();">
+<div id="content-center" style="border: 1px solid #ccc; background-color: white; width: 34em; height: 30em; float: left; text-align: center; position:relative; overflow:hidden; display:none;" onmouseup="button=false;" onmousedown="movestart(event);" onmousemove="mousemovechart(event);">
+</div>
+</body>
+</html>
